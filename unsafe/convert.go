@@ -12,7 +12,15 @@ import "unsafe"
 //Benchmark_Bytes2String1000_EX-8         2000000000               0.30 ns/op            0 B/op          0 allocs/op
 //Benchmark_Bytes2String10000-8            1000000              2289 ns/op           10240 B/op          1 allocs/op
 //Benchmark_Bytes2String10000_EX-8        2000000000               0.29 ns/op            0 B/op          0 allocs/op
-func Bytes2str(b []byte) string {
+func Bytes2String(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
+
+// String2Bytes convert string into []byte.
+// NOTE: panic if modify the member value of the []byte.
+func String2Bytes(s string) []byte {
+	sp := *(*[2]uintptr)(unsafe.Pointer(&s))
+	bp := [3]uintptr{sp[0], sp[1], sp[1]}
+	return *(*[]byte)(unsafe.Pointer(&bp))
+}
